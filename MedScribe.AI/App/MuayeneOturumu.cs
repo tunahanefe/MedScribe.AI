@@ -15,6 +15,7 @@ namespace MedScribe.AI.App;
 /// </summary>
 public sealed class MuayeneOturumu(
     ISpeechInput ses,
+    HekimSorusu soru,
     KomutCozucu komutCozucu,
     TaniService taniService,
     KlinikHizmetService hizmetService,
@@ -95,7 +96,7 @@ public sealed class MuayeneOturumu(
                     break;
 
                 case MuayenedenCikKomutu:
-                    if (transkript.BosMu || Konsol.Onayla("Transkript kaydedilmeden muayeneden çıkılsın mı?"))
+                    if (transkript.BosMu || await soru.OnaylaAsync("Transkript kaydedilmeden muayeneden çıkılsın mı?", ct))
                         return null;
                     break;
             }
@@ -131,7 +132,7 @@ public sealed class MuayeneOturumu(
             return;
         }
 
-        var secilen = adaylar.Count == 1 ? adaylar[0] : AdaySec(adaylar);
+        var secilen = adaylar.Count == 1 ? adaylar[0] : await AdaySecAsync(adaylar, ct);
         if (secilen is null)
         {
             Konsol.Bilgi("   Hizmet ekleme iptal edildi.");
@@ -142,13 +143,13 @@ public sealed class MuayeneOturumu(
         Konsol.Basari($"{secilen} başvuru {baglam.BasvuruId}'e eklendi. Hizmet ID: {kayitId}");
     }
 
-    private static HizmetAdayi? AdaySec(IReadOnlyList<HizmetAdayi> adaylar)
+    private async Task<HizmetAdayi?> AdaySecAsync(IReadOnlyList<HizmetAdayi> adaylar, CancellationToken ct)
     {
         for (var i = 0; i < adaylar.Count; i++)
             Konsol.Yaz(ConsoleColor.Magenta, $"   [{i + 1}] {adaylar[i]}");
 
-        var secim = Konsol.Sor($"   Hangisi eklensin? (1-{adaylar.Count}, boş = iptal)");
-        return int.TryParse(secim, out var no) && no >= 1 && no <= adaylar.Count ? adaylar[no - 1] : null;
+        var no = await soru.SecAsync("   Hangisi eklensin?", adaylar.Count, ct);
+        return no is null ? null : adaylar[no.Value - 1];
     }
 
     /// <summary>
@@ -214,7 +215,7 @@ public sealed class MuayeneOturumu(
             Konsol.Yaz(ConsoleColor.White, $"  {"Tanı",-15}: {t.Tani.IcdKodu} {t.Tani.Adi} [{(t.Kesin ? "Kesin Tanı" : "Ön Tanı")}]");
         Konsol.Bilgi("  (Aynı başlıkta/vital türünde mevcut değer varsa üzerine yazılır.)");
 
-        if (!Konsol.Onayla("Bu bilgiler MiaMed muayene kaydına yazılsın mı?"))
+        if (!await soru.OnaylaAsync("Bu bilgiler MiaMed muayene kaydına yazılsın mı?", ct))
         {
             Konsol.Bilgi("Kayıt yapılmadı.");
             return null;
@@ -293,7 +294,7 @@ public sealed class MuayeneOturumu(
                 Konsol.Bilgi($"    Kaynak : {(oneri.Kaynak == "dikte" ? "hekim dikte etti" : "geçmiş")}; " +
                              $"hastaya {aday.Adet} kez konmuş ({aday.AyniUzmanlikAdet} bu uzmanlıkta), son {aday.SonTarih:dd.MM.yyyy}");
                 Konsol.Bilgi($"    Gerekçe: {oneri.Gerekce}");
-                if (!Konsol.Onayla("    Eklensin mi?")) continue;
+                if (!await soru.OnaylaAsync("    Eklensin mi?", ct)) continue;
             }
             else
             {
@@ -315,8 +316,7 @@ public sealed class MuayeneOturumu(
                 for (var i = 0; i < eslesmeler.Count; i++)
                     Konsol.Yaz(ConsoleColor.Magenta, $"    [{i + 1}] {eslesmeler[i].IcdKodu,-7} {eslesmeler[i].Adi}" +
                                                      (adaylar.ContainsKey(eslesmeler[i].Id) ? "  ← hastaya daha önce konmuş" : ""));
-                var secim = Konsol.Sor($"    Hangisi eklensin? (1-{eslesmeler.Count}, boş = atla)");
-                if (!int.TryParse(secim, out var no) || no < 1 || no > eslesmeler.Count) continue;
+                if (await soru.SecAsync("    Hangisi eklensin?", eslesmeler.Count, ct) is not { } no) continue;
                 kayit = eslesmeler[no - 1];
             }
 
@@ -345,6 +345,7 @@ public sealed class MuayeneOturumu(
         Konsol.Bilgi("  • \"hastanın aldığı son 10 tanıyı listele\"");
         Konsol.Bilgi("  • \"hemogram tetkiki ekle\", \"biyokimya hizmeti ekle\"");
         Konsol.Bilgi("  • \"transkripti göster\", \"muayeneyi tamamla\", \"muayeneden çık\"");
+        Konsol.Bilgi("  • Onay sorularına \"evet\" / \"hayır\", seçimlere \"iki\" / \"ikinci\" diye sesli cevap verebilirsiniz");
         Konsol.Bilgi("  • Alanı zorlamak için başlıkla başlayın: \"fizik muayene: ...\", \"soygeçmiş: ...\", \"özgeçmiş: ...\", \"tedavi planı: ...\"");
     }
 }

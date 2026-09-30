@@ -56,6 +56,7 @@ if (builder.Configuration.GetSection(SesOptions.Section).Get<SesOptions>()?.Mikr
 else
     builder.Services.AddSingleton<ISpeechInput, ConsoleSpeechInput>();
 builder.Services.AddSingleton<KomutCozucu>();
+builder.Services.AddSingleton<HekimSorusu>();
 builder.Services.AddSingleton<PatientService>();
 builder.Services.AddSingleton<TaniService>();
 builder.Services.AddSingleton<KlinikHizmetService>();

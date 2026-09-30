@@ -7,6 +7,16 @@ public static class TurkceMetin
 {
     private static readonly CultureInfo Turkce = CultureInfo.GetCultureInfo("tr-TR");
 
+    private static readonly Dictionary<string, int> SayiKelimeleri = new(StringComparer.Ordinal)
+    {
+        ["bir"] = 1, ["iki"] = 2, ["uc"] = 3, ["dort"] = 4, ["bes"] = 5, ["alti"] = 6, ["yedi"] = 7,
+        ["sekiz"] = 8, ["dokuz"] = 9, ["on"] = 10, ["onbes"] = 15, ["yirmi"] = 20, ["otuz"] = 30, ["elli"] = 50,
+    };
+
+    /// <summary>Katlanmış sayı kelimesi ("uc", "dort") → değer; sayı değilse null.</summary>
+    public static int? SayiKelimesi(string katliKelime) =>
+        SayiKelimeleri.TryGetValue(katliKelime, out var sayi) ? sayi : null;
+
     /// <summary>Türkçe küçük harfe çevirir, noktalamayı atar, boşlukları sadeleştirir. Türkçe karakterler korunur.</summary>
     public static string Sadelestir(string metin)
     {

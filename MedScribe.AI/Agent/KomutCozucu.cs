@@ -22,12 +22,6 @@ public sealed record MuayenedenCikKomutu : SesliKomut;
 /// </summary>
 public sealed partial class KomutCozucu
 {
-    private static readonly Dictionary<string, int> SayiKelimeleri = new(StringComparer.Ordinal)
-    {
-        ["bir"] = 1, ["iki"] = 2, ["uc"] = 3, ["dort"] = 4, ["bes"] = 5, ["alti"] = 6, ["yedi"] = 7,
-        ["sekiz"] = 8, ["dokuz"] = 9, ["on"] = 10, ["onbes"] = 15, ["yirmi"] = 20, ["otuz"] = 30, ["elli"] = 50,
-    };
-
     [GeneratedRegex(@"\bson (cumleyi|cumle|kismi|kisim|satiri|yaziyi) sil\b")]
     private static partial Regex SonCumleyiSilRegex();
 
@@ -96,6 +90,6 @@ public sealed partial class KomutCozucu
     private static int? AdetCoz(string deger)
     {
         if (int.TryParse(deger, out var sayi) && sayi > 0) return sayi;
-        return SayiKelimeleri.TryGetValue(deger, out var kelime) ? kelime : null;
+        return TurkceMetin.SayiKelimesi(deger);
     }
 }
