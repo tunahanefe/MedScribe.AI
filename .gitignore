@@ -1,0 +1,16 @@
+# Derleme çıktıları
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+# Gizli ayarlar: DB bağlantı cümlesi (şablon: appsettings.Local.example.json)
+appsettings.Local.json
+
+# Whisper modeli (~870 MB) — https://huggingface.co/ggerganov/whisper.cpp adresinden indirilir
+**/models/*.bin
+
+# Debug logları hasta verisi içerebilir
+logs/
+*.log

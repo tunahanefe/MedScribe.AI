@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>MedScribe.AI</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+    <!-- Mikrofon + yerel Whisper (bkz. Speech/WhisperSpeechInput.cs). GPU: Vulkan (CUDA Toolkit gerektirmez), yedek: CPU.
+         CUDA Toolkit 12 kurulursa Whisper.net.Runtime.Cuda eklenip RuntimeLibraryOrder başına alınabilir. -->
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="Whisper.net" Version="1.9.1" />
+    <PackageReference Include="Whisper.net.Runtime" Version="1.9.1" />
+    <PackageReference Include="Whisper.net.Runtime.Vulkan" Version="1.9.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Gizli bağlantı cümlesi; git'e girmez (.gitignore). Şablon: appsettings.Local.example.json -->
+    <None Update="appsettings.Local.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('appsettings.Local.json')" />
+    <!-- Whisper modeli (~870 MB): models/ggml-large-v3-turbo-q8_0.bin — https://huggingface.co/ggerganov/whisper.cpp -->
+    <None Update="models\*.bin" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

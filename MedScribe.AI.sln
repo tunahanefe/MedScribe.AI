@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37012.4 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedScribe.AI", "MedScribe.AI\MedScribe.AI.csproj", "{BAF846B9-1D01-4461-A55E-9BE760F240E9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BAF846B9-1D01-4461-A55E-9BE760F240E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAF846B9-1D01-4461-A55E-9BE760F240E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAF846B9-1D01-4461-A55E-9BE760F240E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAF846B9-1D01-4461-A55E-9BE760F240E9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F8E02B9B-87B6-40FF-B3A0-73980B150679}
+	EndGlobalSection
+EndGlobal
