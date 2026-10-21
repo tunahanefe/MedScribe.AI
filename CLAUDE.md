@@ -2,7 +2,15 @@
 
 Hekim muayenesi için sesli medikal asistan: .NET 8 konsol uygulaması. Konuşma Whisper ile yazıya çevrilir,
 Ollama (`qwen2.5:14b`) ile anamnez/tanı/tetkik çıkarılır, sonuç MiaMed HBYS veritabanına yazılır.
-Kurulum adımları: `KURULUM.md`.
+Kurulum adımları: `KURULUM.md` (ortam kontrolü: `.\kurulum.ps1`).
+
+## Komutlar ve yapı
+
+- Derleme: `dotnet build`; çalıştırma: `dotnet run --project MedScribe.AI`. Test projesi yok.
+- `Agent/` sesli komut/cevap çözümleme ve Türkçe metin normalizasyonu · `App/` konsol arayüzü, muayene oturumu, hekim soruları ·
+  `Services/` LLM (Ollama), hasta geçmişi, tanı, tetkik, muayene kaydı · `Speech/` Whisper + NAudio ·
+  `Data/` + `Domain/` MiaMed EF eşlemeleri · `Configuration/` `MedScribe:*` ayarları.
+- Ollama: `NumCtx 16384`, `Temperature 0.1`; bağlam taşması/kesilme şüphesinde ilk bakılacak yer `MedScribe:Ollama`.
 
 ## Veritabanı (MiaMed_ULU)
 
